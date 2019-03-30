@@ -42,7 +42,7 @@ public class AN30TenWizards {
 
         while (!queue.isEmpty()) {
             Wizard current = queue.poll();
-//            if (current.id == target) break;
+            if (current.id == target) break;
 
             // update to visited
             visited[current.id] = true;

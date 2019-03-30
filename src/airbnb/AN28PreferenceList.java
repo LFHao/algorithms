@@ -10,7 +10,13 @@ import java.util.Queue;
 import java.util.Set;
 
 /**
+ * 每个人都有一个preference的排序，在不违反每个人的preference的情况下得到总体的preference的排序
  * Topological sort
+ * 在图论中，拓扑排序（Topological Sorting）是一个有向无环图（DAG, Directed Acyclic Graph）的所有顶点的线性序列。且该序列必须满足下面两个条件：
+ * 1、每个顶点出现且只出现一次。
+ * 2、若存在一条从顶点 A 到顶点 B 的路径，那么在序列中顶点 A 出现在顶点 B 的前面。
+ * 有向无环图（DAG）才有拓扑排序，非DAG图没有拓扑排序一说。
+ *
  */
 public class AN28PreferenceList {
     public List<Integer> getPreference(List<List<Integer>> preferences) {
@@ -37,6 +43,7 @@ public class AN28PreferenceList {
 
         for (List<Integer> list : preferences) {
             for (int i = 0; i < list.size() - 1; i++) {
+                // ATTENTION: check duplicate
                 if (!graph.get(list.get(i)).contains(graph.get(list.get(i + 1)))) {
                     graph.get(list.get(i)).add(list.get(i + 1));
                     indegrees.put(list.get(i + 1), indegrees.get(list.get(i + 1)) + 1);
@@ -61,6 +68,16 @@ public class AN28PreferenceList {
                 indegrees.put(next, indegrees.get(next) - 1);
                 if (indegrees.get(next) == 0) {
                     queue.offer(next);
+                }
+            }
+        }
+
+        // if the size is not equal, it means there is cycle
+        // so we cannot decide which one is preferred by the next, so add them all
+        if (res.size() != indegrees.size()) {
+            for (int p : indegrees.keySet()) {
+                if (indegrees.get(p) != 0) {
+                    res.add(p);
                 }
             }
         }
