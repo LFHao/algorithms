@@ -1,33 +1,57 @@
 package airbnb;
 
-import java.util.Collections;
-import java.util.PriorityQueue;
 
-// https://leetcode.com/problems/find-median-from-data-stream/
+/**
+ * Question:
+ * Find the median from a large file of integers. You can not access the numbers by index, can only access it
+ * sequentially. And the numbers cannot fit in memory.
+ *
+ * Similar to https://leetcode.com/problems/find-median-from-data-stream/
+ */
 public class BN09FindMedianInLargeFile {
-    /** initialize your data structure here. */
-    /** Use 2 heaps: maxSmall heap to store smaller half, and minLarge heap to store larger half
-     And the maxSmall is 1 bigger or equal to minLarge, so when findMedian, you can get maxSmall if it's odd
-     **/
-    private PriorityQueue<Integer> maxSmall;
-    private PriorityQueue<Integer> minLarge;
-
-    public BN09FindMedianInLargeFile() {
-        maxSmall = new PriorityQueue<>(Collections.reverseOrder()); // reverse order and no size limit
-        minLarge = new PriorityQueue<>();
-    }
-
-    public void addNum(int num) {
-        maxSmall.add(num);
-        // because maxSmall has 1 more number added, then it should move 1 number to minLarge
-        minLarge.add(maxSmall.poll());
-        if (minLarge.size() > maxSmall.size()) {
-            maxSmall.add(minLarge.poll());
+    public double findMedian(int[] nums) {
+        int len = nums.length;
+        if (len % 2 == 1) {
+            // if it is an odd number, find the median one in the nums
+            return search(nums, len/2 + 1, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        } else {
+            // if it is an even number, find the len/2-th and the (len/2+1)-th to get the median
+            return (search(nums, len/2, Integer.MIN_VALUE, Integer.MAX_VALUE) +
+                    search(nums, len/2 + 1, Integer.MIN_VALUE, Integer.MAX_VALUE)) / 2;
         }
     }
 
-    public double findMedian() {
-        if (maxSmall.size() == minLarge.size()) return (double) (maxSmall.peek() + minLarge.peek())/2;
-        return maxSmall.peek();
+    private long search(int[] nums, int n, long low, long high) {
+        if (low >= high) return low;
+
+        long res = low;
+        // use long to avoid overflow (larger than Integer.MAX_VALUE)
+        long guess = low + (high - low) / 2;
+        // get how many numbers are smaller than guess
+        int count = 0;
+        for (int num : nums) {
+            if (num <= guess) {
+                count++;
+                // result should be the largest one that is smaller than guess
+                // it must be in the array
+                res = Math.max(res, num);
+            }
+        }
+
+        if (count == n) {
+            return res;
+        } else if (count < n) {
+            return search(nums, n, Math.max(res + 1, guess), high);
+        } else {
+            return search(nums, n, low, res);
+        }
     }
+
+    public static void main(String[] args) {
+        BN09FindMedianInLargeFile s = new BN09FindMedianInLargeFile();
+        System.out.println(s.findMedian(new int[]{3, -2, 7}));
+        System.out.println(s.findMedian(new int[]{-100, 99, 3, 0, 5, 7, 11, 66}));
+        System.out.println(s.findMedian(new int[]{4, -100, 99, 3, 0, 5, 7, 11, 66, -33}));
+    }
+
 }

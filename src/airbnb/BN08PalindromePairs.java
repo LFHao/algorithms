@@ -6,9 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Question:
+ * Given a list of unique words, find all pairs of distinct indices (i, j) in the given list,
+ * so that the concatenation of the two words, i.e. words[i] + words[j] is a palindrome.
+ *
  * https://leetcode.com/problems/palindrome-pairs/discuss/79199/150-ms-45-lines-JAVA-solution
+ *
  */
 public class BN08PalindromePairs {
+    /**
+     * Time Complexity: O(n * L^2): number of words * L (traverse word) * L (check if there is palindrome)
+     * @param words
+     * @return
+     */
     public List<List<Integer>> palindromePairs(String[] words) {
         List<List<Integer>> res = new ArrayList<>();
         if (words == null || words.length < 2) return res;
@@ -38,7 +48,10 @@ public class BN08PalindromePairs {
 
                 if (isPalindrome(str2)) {
                     String str1Rev = new StringBuilder(str1).reverse().toString();
-                    // to remove the duplicate
+                    // str2.length() != 0 is to remove the duplicate
+                    // if in previous round str1 = "" and str2 = word, already finds the pair A
+                    // when str1 = word and str2 = "", it would be the same result as the pair A
+                    // so we should remove the duplicate
                     if (map.containsKey(str1Rev) && map.get(str1Rev) != i && str2.length()!=0) {
                         List<Integer> list = new ArrayList<>();
                         list.add(map.get(str1Rev));
@@ -56,19 +69,17 @@ public class BN08PalindromePairs {
         int start = 0;
         int end = word.length() - 1;
 
-        while (start <= end) {
-            if (word.charAt(start) != word.charAt(end)) {
+        while (start < end) {
+            if (word.charAt(start++) != word.charAt(end--)) {
                 return false;
             }
-            start++;
-            end--;
         }
 
         return true;
     }
 
     public static void main(String[] args) {
-        String[] words = {"a", ""};
+        String[] words = {"abcd","dcba","lls","s","sssll"};
         System.out.println(new BN08PalindromePairs().palindromePairs(words));
     }
 }

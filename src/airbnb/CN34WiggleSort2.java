@@ -6,29 +6,33 @@ package airbnb;
  *
  * Quick Select to find KthLargest:
  * https://leetcode.com/problems/kth-largest-element-in-an-array/discuss/60312/AC-Clean-QuickSelect-Java-solution-avg.-O(n)-time
+ *
+ * Time: O(n), Space: O(n)
  */
 public class CN34WiggleSort2 {
     public void wiggleSort(int[] nums) {
-        int median = findKthLargest(nums, (nums.length + 1) / 2);
+        int[] copy = nums.clone();
+        int median = findKthLargest(copy, (copy.length + 1) / 2);
 
         int n = nums.length;
-
-        // Mapped_idx[Left] denotes the position where the next smaller-than median element  will be inserted.
-        // Mapped_idx[Right] denotes the position where the next larger-than median element  will be inserted.
-        int left = 0, i = 0, right = n - 1;
-
-        while (i <= right) {
-            if (nums[newIndex(i,n)] > median) {
-                swap(nums, newIndex(left++,n), newIndex(i++,n));
-            }
-            else if (nums[newIndex(i,n)] < median) {
-                swap(nums, newIndex(right--,n), newIndex(i++,n));
-            }
-            else {
-                i++;
+        // l points from 0, means what position/index can insert number smaller than median
+        // r points from n - 1, means what position/index can insert number larger than median
+        // p traverses the array from 0 to r
+        for (int l = 0, r = n - 1, p = l; p <= r;) {
+            if (copy[p] < median) {
+                // p++ here because we know the number swapped from num[l] was traversed already either smaller or equal to median
+                swap(copy, l++, p++);
+            } else if (copy[p] > median) {
+                // we don't increment p here because we haven't traversed num[r] swapped here
+                swap(copy, p, r--);
+            } else {
+                p++;
             }
         }
 
+        int m =(n + 1) / 2;
+        for (int i = m - 1, j = 0; i >= 0; i--, j += 2) nums[j] = copy[i];
+        for (int i = n - 1, j = 1; i >= m; i--, j += 2) nums[j] = copy[i];
     }
 
     private int findKthLargest(int[] a, int k) {
@@ -65,14 +69,9 @@ public class CN34WiggleSort2 {
         a[j] = tmp;
     }
 
-    private int newIndex(int index, int n) {
-        int newIndex = (1 + 2*index) % (n | 1);
-        return newIndex;
-    }
-
     public static void main(String[] args) {
-        int[] array = {6,13,5,4,5,2};
-        new CN34WiggleSort2().wiggleSort(array);
+        int[] array = {5,3,1,2,6,7,8,5,5};
+        System.out.println(new CN34WiggleSort2().findKthLargest(array, (array.length + 1)/2));
         for(int i : array) {
             System.out.print(i + ", ");
         }

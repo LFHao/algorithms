@@ -35,6 +35,7 @@ public class BN03ListOfListIterator implements Iterator<Integer> {
 
     @Override
     public void remove() {
+        // if !colIter.hasNext(), it.remove() should throw exception, so here we should leave it as the same for this remove()
         while (colIter == null && rowIter.hasNext()) {
             colIter = rowIter.next().iterator();
         }
@@ -44,28 +45,29 @@ public class BN03ListOfListIterator implements Iterator<Integer> {
     }
 
     public static void main(String[] args) {
-        List<Integer> array1 = new ArrayList<>(Arrays.asList(1, 2));
-        List<Integer> array2 = Arrays.asList(3);
-        List<List<Integer>> lists = new ArrayList<>();
-        lists.add(array1);
-        lists.add(array2);
+        List<List<Integer>> test = new ArrayList<>();
+        test.add(new ArrayList<Integer>() {{
+            add(1);
+            add(2);
+        }});
+        test.add(new ArrayList<Integer>() {{
+            add(3);
+        }});
+        test.add(new ArrayList<Integer>() {{
+            add(4);
+            add(5);
+            add(6);
+        }});
 
-        Iterator a = array1.iterator();
-        a.hasNext();
-        a.next();
-        a.remove();
+        BN03ListOfListIterator s = new BN03ListOfListIterator(test);
+        System.out.println(s.hasNext());
+        System.out.println(s.next());
+        s.remove();
+        List<Integer> res = new ArrayList<>();
+        while (s.hasNext()) {
+            res.add(s.next());
+        }
 
-//        airbnb.BN03ListOfListIterator aaa = new airbnb.BN03ListOfListIterator(lists);
-//        aaa.hasNext();
-//        aaa.next();
-//        aaa.remove();
-//        System.out.println(iterator.next());
-//        System.out.println(aaa.hasNext());
-//        System.out.println(aaa.next());
-//        System.out.println(aaa.hasNext());
-//        System.out.println(aaa.next());
-//        aaa.remove();
-//        System.out.println(lists);
-
+        System.out.println(res);
     }
 }
