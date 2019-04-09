@@ -69,8 +69,13 @@ public class BN08PalindromePairs {
         int start = 0;
         int end = word.length() - 1;
 
+        word = word.toLowerCase();
         while (start < end) {
-            if (word.charAt(start++) != word.charAt(end--)) {
+            if (!Character.isLetterOrDigit(word.charAt(start))) {
+                start++;
+            } else if(!Character.isLetterOrDigit(word.charAt(end))) {
+                end--;
+            } else if (word.charAt(start++) != word.charAt(end--)) {
                 return false;
             }
         }

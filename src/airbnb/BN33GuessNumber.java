@@ -71,7 +71,6 @@ public class BN33GuessNumber {
         }
     }
 
-
     public int[] guess(String num, String correct) {
         int[] res = new int[2];
         Set<Integer> indexSet = new HashSet<>();

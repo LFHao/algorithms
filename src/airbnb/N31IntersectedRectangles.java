@@ -75,12 +75,13 @@ public class N31IntersectedRectangles {
                 return;
             }
 
+            // Union by rank
             if (groups[i].rank <= groups[j].rank) {
-                groups[i].root = jRoot;
-                groups[j].rank++;
+                groups[iRoot].root = jRoot;
+                groups[jRoot].rank++;
             } else {
-                groups[j].rank = iRoot;
-                groups[i].rank++;
+                groups[jRoot].root = iRoot;
+                groups[iRoot].rank++;
             }
         }
     }
