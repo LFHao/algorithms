@@ -147,6 +147,12 @@ public class AN14WaterDrop {
         wd.pourWater(waterLand, 5, 20);
         System.out.println();
 
+        int[] waterLand2 = new int[]{2, 1, 1, 1, 1, 1, 2};
+        wd.dropWater(waterLand2, 3, 2);
+        System.out.println();
+        wd.pourWater(waterLand2, 3, 2);
+        System.out.println();
+
     }
 
 }

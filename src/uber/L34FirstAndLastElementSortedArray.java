@@ -18,9 +18,8 @@ public class L34FirstAndLastElementSortedArray {
     private int findFirst(int[] nums, int target) {
         int start = 0, end = nums.length - 1;
         int index = -1;
-        int mid;
-        while (start <= end) {
-            mid = start + (end - start)/2;
+        while (start + 1 < end) {
+            int mid = start + (end - start)/2;
             if (nums[mid] >= target) {
                 end = mid - 1;
             } else {
@@ -36,9 +35,8 @@ public class L34FirstAndLastElementSortedArray {
     private int findLast(int[] nums, int target) {
         int start = 0, end = nums.length - 1;
         int index = -1;
-        int mid;
-        while (start <= end) {
-            mid = start + (end - start)/2;
+        while (start + 1 < end) {
+            int mid = start + (end - start)/2;
             if (nums[mid] <= target) {
                 start = mid + 1;
             } else {

@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Topological sort
@@ -26,9 +27,7 @@ public class AlienDictionary {
 
         // topological sort
         StringBuilder sb = new StringBuilder();
-        topoSort(graph, indegrees, sb);
-
-        return sb.toString();
+        return topoSort(graph, indegrees, sb) ? sb.toString() : "";
     }
 
     private void buildGraph(String[] words, Map<Character, Set<Character>> graph, Map<Character, Integer> indegrees) {
@@ -57,7 +56,7 @@ public class AlienDictionary {
         }
     }
 
-    private void topoSort(Map<Character, Set<Character>> graph, Map<Character, Integer> indegrees, StringBuilder sb) {
+    private boolean topoSort(Map<Character, Set<Character>> graph, Map<Character, Integer> indegrees, StringBuilder sb) {
         Queue<Character> queue = new LinkedList<>();
         for (Character c : indegrees.keySet()) {
             if (indegrees.get(c) == 0) {
@@ -78,10 +77,13 @@ public class AlienDictionary {
             }
 
         }
+
+        return indegrees.entrySet().stream().filter(e -> e.getValue() > 0).collect(Collectors.toList()).isEmpty();
+
     }
 
     public static void main(String[] args) {
-        String[] words = {"zy","zx"};
+        String[] words = {  "z", "z"};
         System.out.println(new AlienDictionary().alienOrder(words));
     }
 }

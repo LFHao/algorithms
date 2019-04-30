@@ -10,8 +10,9 @@ package airbnb;
  * 一个大妈考得，说是一般在店面考，卧轨了。
  * csv parser
  * 如果有逗号，转化成|
- * 如果有引号，把不考虑引号里逗号，把引号里的内容去引号整体打印。
+ * 如果有引号，不考虑引号里逗号，把引号里的内容去引号整体打印。
  * 如果有两重引号，只去掉一重引号。
+ * 如果有多重引号，只留一重引号
  *
  * 例子
  * aa, bb, “aa”,”aa,bb”, “aa””aa”””
@@ -100,6 +101,8 @@ public class DN11CSVParser {
                         "\"Alexandra \"\"Alex\"\"\",Menendez,alex.menendez@gmail.com,Miami,1\n" +
                         "\"\"\"Alexandra Alex\"\"\"";
 //        String doc = "\"aa\",ab";
+        System.out.println(doc);
+
         System.out.println(DN11CSVParser.parseCSV(doc));
     }
 }

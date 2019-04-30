@@ -101,8 +101,8 @@ public class BN33GuessNumber {
     }
 
     public static void main(String[] args) {
-        BN33GuessNumber s = new BN33GuessNumber("5566");
-//        System.out.println(s.guessNumber());
-        System.out.println(s.guess("6111", "5566")[0] + ", " + s.guess("6111", "5566")[1]);
+        BN33GuessNumber s = new BN33GuessNumber("5426");
+        System.out.println(s.guessNumber());
+//        System.out.println(s.guess("6111", "5566")[0] + ", " + s.guess("6111", "5566")[1]);
     }
 }
