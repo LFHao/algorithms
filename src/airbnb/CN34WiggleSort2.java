@@ -1,5 +1,11 @@
 package airbnb;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
  * Virtual Indexing:
  * https://leetcode.com/problems/wiggle-sort-ii/discuss/77682/Step-by-step-explanation-of-index-mapping-in-Java
@@ -70,10 +76,27 @@ public class CN34WiggleSort2 {
     }
 
     public static void main(String[] args) {
-        int[] array = {5,3,1,2,6,7,8,5,5};
-        System.out.println(new CN34WiggleSort2().findKthLargest(array, (array.length + 1)/2));
-        for(int i : array) {
-            System.out.print(i + ", ");
-        }
+//        int[] array = {5,3,1,2,6,7,8,5,5};
+//        System.out.println(new CN34WiggleSort2().findKthLargest(array, (array.length + 1)/2));
+//        for(int i : array) {
+//            System.out.print(i + ", ");
+//        }
+
+        List<Item> list = new ArrayList<>(Collections.nCopies(4, null));
+        list.set(0, new Item(0));
+        list.set(2, new Item(1));
+        list.set(3, null);
+        List<Item> res = list.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        System.out.println(res);
+
+    }
+
+
+}
+
+class Item {
+    int id;
+    Item(int id) {
+        this.id = id;
     }
 }

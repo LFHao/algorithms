@@ -1,5 +1,8 @@
 package uber;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DesignRateLimiter {
     int tokenPerSecond;
     long lastCheckTime;
@@ -10,7 +13,7 @@ public class DesignRateLimiter {
     DesignRateLimiter(int tokens, int seconds, int capacity) {
         tokenPerSecond = tokens /seconds; // refill rate
         lastCheckTime = System.currentTimeMillis();
-        totalTokens = 0;
+        totalTokens = capacity;
     }
 
     public boolean acquire() {
@@ -23,5 +26,6 @@ public class DesignRateLimiter {
         if (totalTokens < 1) return false;
         totalTokens--;
         return true;
+
     }
 }

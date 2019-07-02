@@ -28,14 +28,16 @@ public class BN22MenuCombination {
             return;
         }
 
+        if (centTarget < 0) return;
+
         for (int i = start; i < centPrices.length; i++) {
             if (i > start && centPrices[i] == centPrices[i - 1]) {
                 continue;
             }
 
-            if (centPrices[i] > centTarget) {
-                break;
-            }
+//            if (centPrices[i] > centTarget) {
+//                break;
+//            }
 
             curComb.add(prices[i]);
             search(res, curComb, centPrices, prices, centTarget - centPrices[i], i + 1);

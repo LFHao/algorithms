@@ -3,13 +3,11 @@ package google;
 
 public class L410SplitArrayLargestSum {
     /**
+     * DP
      * Time complexity : O(n^2 * m). The total number of states is O(n * m). To compute each state f[i][j], we need to go through the
      *  whole array to find the optimum k. This requires another O(n) loop. So the total time complexity is O(n ^ 2 * m)
      *
      * Space complexity : O(n * m). The space complexity is equivalent to the number of states, which is O(n * m)
-     * @param nums
-     * @param m
-     * @return
      */
     public int splitArray(int[] nums, int m) {
         int n = nums.length;
@@ -46,9 +44,62 @@ public class L410SplitArrayLargestSum {
         return dp[n][m];
     }
 
+    /**
+     * Binary Search
+     * Time Complexity:
+     * Space:
+     *
+     */
+    public int splitArray2(int[] nums, int m) {
+        int n = nums.length;
+        int max = nums[0];
+        int[] subSum = new int[n];
+        subSum[0] = nums[0];
+        for (int i = 1; i < n; i++) {
+            max = Math.max(max, nums[i]);
+            subSum[i] = subSum[i - 1] + nums[i];
+        }
+        int sum = subSum[n - 1];
+
+        if (m == 1) return sum;
+
+        int start = max;
+        int end = sum;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+
+            // might cut into less than m parts, then mid is larger than target
+            if (isValid(nums, m, mid, subSum)) {
+                end = mid - 1;
+            } else {
+                // mid is smaller than target
+                start = mid + 1;
+            }
+        }
+
+        return start;
+    }
+
+    private boolean isValid(int[] nums, int m, int target, int[] subSum) {
+        int count = 1;
+        int i = -1;
+        int total = 0;
+        for (int j = 0; j < subSum.length; j++) {
+            total = i == -1? subSum[j] : subSum[j] - subSum[i];
+            if (total > target) {
+                i = j - 1;
+                count++;
+                if (count > m) return false;
+            }
+        }
+
+        return true;
+    }
+
+
     public static void main(String[] args) {
         int[] nums = {7,2,5,10,8};
-        System.out.println(new L410SplitArrayLargestSum().splitArray(nums, 2));
+        System.out.println(new L410SplitArrayLargestSum().splitArray2(nums, 2));
 
     }
 }

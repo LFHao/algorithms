@@ -2,87 +2,94 @@ package typical;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class NumberOfIslands2 {
 
-    /**
-     * @param n: An integer
-     * @param m: An integer
-     * @param operators: an array of point
-     * @return: an integer array
-     */
-    public List<Integer> numIslands2(int n, int m, Point[] operators) {
-        // this array to record the root of each typical.Point
-        int[] roots = new int[n * m];
-        Arrays.fill(roots, -1);
+    public List<Integer> numIslands2(int m, int n, int[][] positions) {
         List<Integer> res = new ArrayList<>();
-        int count = 0;
+        if (positions == null || positions.length == 0) return res;
 
-        int[][] dir = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-        for (int i = 0; i < operators.length; i++) {
+        UnionFind uf = new UnionFind(m*n);
+        int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        int count = 0;
+        for (int[] position : positions) {
             count++;
 
-            int index = operators[i].x * m + operators[i].y;
-            roots[index] = index;
+            int x = position[0];
+            int y = position[1];
+            int index = x*n + y;
+            // set to index
+            uf.roots[index] = index;
 
-            // find neighbor's roots and union if necessary
-            for (int j = 0; j < dir.length; j++) {
-                int x = operators[i].x + dir[j][0];
-                int y = operators[i].y + dir[j][1];
-                int neighbor = x * m + y;
-                if (x >= 0 && y >=0 && x < n && y < m && roots[neighbor] != -1) {
-                    int root = findRoot(roots, neighbor);
+            for (int[] dir : dirs) {
+                int neighborX = x + dir[0];
+                int neighborY = y + dir[1];
+                int neighborIndex = neighborX*n + neighborY;
 
-                    // union if different
-                    if (root != index) {
-                        count = union(roots, index, neighbor, count);
+                if (validIndex(neighborX, neighborY, m, n) && uf.roots[neighborIndex] != -1) {
+                    // only when roots are different, we union and we decrement count if union
+                    if (uf.union(index, neighborIndex)) {
+                        count--;
                     }
                 }
             }
-
             res.add(count);
         }
 
         return res;
     }
 
-    private int findRoot(int[] roots, int index) {
-        while (index != roots[index]) {
-            roots[index] = roots[roots[index]];
-            index = roots[index];
-        }
-        return index;
+    private boolean validIndex(int x, int y, int m, int n) {
+        return x >=0 && y >= 0 && x < m && y < n;
     }
 
-    private int union(int[] roots, int i1, int i2, int count) {
-        int id1 = roots[i1], id2 = roots[i2];
-        if (id1 != id2) {
-            for (int i = 0; i < roots.length; i++) {
-                if (roots[i] == id2) {
-                    roots[i] = id1;
-                }
-            }
-            count--;
-            return count;
+    class UnionFind {
+        int[] roots;
+        int[] ranks;
+
+        UnionFind(int n) {
+            roots = new int[n];
+            ranks = new int[n];
+            Arrays.fill(roots, -1);
         }
-        return count;
+
+        // path compression
+        int find(int i) {
+            if (i != roots[i]) {
+                roots[i] = find(roots[i]);
+            }
+            return roots[i];
+        }
+
+        // union by rank
+        boolean union(int i, int j) {
+            int rootI = find(i);
+            int rootJ = find(j);
+
+            // do not need to union
+            if (rootI == rootJ) return false;
+
+            if (ranks[rootI] > ranks[rootJ]) {
+                roots[rootJ] = roots[rootI];
+            } else if (ranks[rootI] < ranks[rootJ]) {
+                roots[rootI] = roots[rootJ];
+            } else {
+                roots[rootJ] = roots[rootI];
+                ranks[rootI]++;
+            }
+
+            return true;
+        }
     }
 
     public static void main(String[] args) {
         NumberOfIslands2 noi = new NumberOfIslands2();
-        Point[] points = {new Point(0,0), new Point(1,1), new Point(1,0), new Point(0,1)};
-        System.out.println(noi.numIslands2(2, 2, points));
-    }
-}
+        int[][] points = {{0,0},{0,1},{1,2},{2,1}};
+        System.out.println(noi.numIslands2(3, 3, points));
 
-/**
- * Definition for a point.
- */
-class Point {
-    int x;
-    int y;
-    Point() { x = 0; y = 0; }
-    Point(int a, int b) { x = a; y = b; }
+    }
 }
 
